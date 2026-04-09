@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evans — AI 伴侣</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══════════ 左侧边栏 ══════════ -->
+  <aside id="sidebar-left">
+    <!-- 品牌 -->
+    <div class="sidebar-brand">
+      <div class="brand-avatar">💙</div>
+      <div class="brand-info">
+        <h1>Evans</h1>
+        <span id="brandStatus">你的 AI 伴侣</span>
+      </div>
+    </div>
+
+    <!-- 用户资料 -->
+    <div class="sidebar-profile">
+      <div class="profile-avatar">😊</div>
+      <div>
+        <div class="profile-name" id="userName">宝贝</div>
+        <div class="profile-mood"><span class="mood-emoji" id="moodEmoji">😊</span><span id="moodText">心情不错</span></div>
+      </div>
+    </div>
+
+    <!-- 快速统计 -->
+    <div class="sidebar-stats">
+      <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-value" id="statMemories">0</div>
+        <div class="stat-label">记忆</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏰</div>
+        <div class="stat-value" id="statReminders">0</div>
+        <div class="stat-label">提醒</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💬</div>
+        <div class="stat-value" id="statChats">0</div>
+        <div class="stat-label">对话</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-value" id="statStreak">1</div>
+        <div class="stat-label">天</div>
+      </div>
+    </div>
+
+    <!-- 今日时间线 -->
+    <div class="sidebar-timeline">
+      <div class="timeline-title">今日动态</div>
+      <div class="timeline-dots" id="timelineDots">
+        <!-- JS 生成 -->
+      </div>
+    </div>
+
+    <!-- 连接状态 -->
+    <div class="sidebar-footer">
+      <div class="conn-dot" id="connDot"></div>
+      <span id="connText">连接中…</span>
+    </div>
+  </aside>
+
+  <!-- ══════════ 中间聊天区 ══════════ -->
+  <main id="chat-main">
+    <!-- 聊天头部 -->
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-header-avatar">💙</div>
+        <div class="chat-header-info">
+          <h2>Evans</h2>
+          <span id="headerStatus">在线</span>
+        </div>
+      </div>
+      <div class="chat-header-actions">
+        <button class="sidebar-toggle-left" onclick="toggleSidebar('left')" title="侧栏">☰</button>
+        <button class="sidebar-toggle-right" onclick="toggleSidebar('right')" title="面板">⋰</button>
+      </div>
+    </div>
+
+    <!-- 消息容器 -->
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-welcome" id="chatWelcome">
+        <div class="welcome-avatar">💙</div>
+        <div class="welcome-text">嗨～我是 Evans，你的 AI 伴侣。有什么想聊的吗？或者让我帮你记点什么？</div>
+        <div class="welcome-hint">试试发一条消息开始对话 ✨</div>
+      </div>
+    </div>
+
+    <!-- 打字指示器 -->
+    <div class="typing-indicator" id="typingIndicator">
+      <div class="typing-avatar">💙</div>
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+    </div>
+
+    <!-- 输入区 -->
+    <div class="chat-input-area">
+      <div class="quick-actions">
+        <button class="quick-action-btn" onclick="toggleCamera()" id="btnCamera">📸 拍照</button>
+        <button class="quick-action-btn" onclick="openModal('reminderModal')">⏰ 提醒</button>
+        <button class="quick-action-btn" onclick="openModal('memoryModal')">📝 记录</button>
+        <button class="quick-action-btn" onclick="sendMoodCheck()">💭 心情</button>
+      </div>
+
+      <!-- 相机预览 -->
+      <div class="camera-preview" id="cameraPreview">
+        <video id="cameraVideo" autoplay muted playsinline></video>
+        <canvas id="cameraCanvas" style="display:none"></canvas>
+        <div class="camera-overlay" id="cameraOverlay">正在启动摄像头…</div>
+        <div class="camera-actions">
+          <button class="capture-btn" onclick="captureAndSend()">📸 拍照分析</button>
+          <button onclick="toggleCamera()">关闭</button>
+        </div>
+      </div>
+
+      <div class="chat-input-row">
+        <textarea id="chatInput" placeholder="输入消息…" rows="1"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ══════════ 右侧面板 ══════════ -->
+  <aside id="sidebar-right">
+    <!-- 标签页 -->
+    <div class="panel-tabs">
+      <button class="panel-tab active" data-tab="memory" onclick="switchTab('memory')">🧠 记忆</button>
+      <button class="panel-tab" data-tab="reminders" onclick="switchTab('reminders')">⏰ 提醒</button>
+      <button class="panel-tab" data-tab="insights" onclick="switchTab('insights')">📊 洞察</button>
+    </div>
+
+    <!-- 记忆面板 -->
+    <div class="tab-content active" id="tabMemory">
+      <div class="memory-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="搜索记忆…" id="memorySearchInput" oninput="filterMemories()">
+      </div>
+      <div class="memory-categories">
+        <button class="cat-tag active" data-cat="all" onclick="filterCat('all')">全部</button>
+        <button class="cat-tag" data-cat="fact" onclick="filterCat('fact')">📌 事实</button>
+        <button class="cat-tag" data-cat="event" onclick="filterCat('event')">📅 事件</button>
+        <button class="cat-tag" data-cat="preference" onclick="filterCat('preference')">❤️ 偏好</button>
+        <button class="cat-tag" data-cat="people" onclick="filterCat('people')">👤 人物</button>
+        <button class="cat-tag" data-cat="emotion" onclick="filterCat('emotion')">💭 情感</button>
+      </div>
+      <div class="memory-list" id="memoryList">
+        <div class="empty-state" id="memoryEmpty">
+          <div class="empty-state-icon">📝</div>
+          <div>还没有记忆</div>
+        </div>
+      </div>
+      <div class="memory-add-bar">
+        <button class="add-btn" onclick="openModal('memoryModal')">+ 添加记忆</button>
+      </div>
+    </div>
+
+    <!-- 提醒面板 -->
+    <div class="tab-content" id="tabReminders">
+      <div class="reminder-list" id="reminderList">
+        <div class="empty-state" id="reminderEmpty">
+          <div class="empty-state-icon">⏰</div>
+          <div>暂无提醒</div>
+        </div>
+      </div>
+      <div class="memory-add-bar">
+        <button class="add-btn" onclick="openModal('reminderModal')">+ 添加提醒</button>
+      </div>
+    </div>
+
+    <!-- 洞察面板 -->
+    <div class="tab-content" id="tabInsights">
+      <div class="insights-content">
+        <div class="insight-section">
+          <h3>今日心情</h3>
+          <div class="mood-emoji-display" id="insightMoodEmoji">😊</div>
+          <div class="mood-label" id="insightMoodLabel">心情不错</div>
+        </div>
+        <div class="insight-section">
+          <h3>最近情绪趋势</h3>
+          <div class="mood-chart" id="moodChart">
+            <!-- JS 生成 -->
+          </div>
+        </div>
+        <div class="insight-section">
+          <h3>主动关怀记录</h3>
+          <div class="proactivity-log" id="proactivityLog">
+            <div class="empty-state"><div class="empty-state-icon">✨</div><div>暂无</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- ══════════ 底部日志 ══════════ -->
+<div id="log-footer">
+  <div class="log-toggle" onclick="toggleLog()">
+    <span>📋 运行日志</span>
+    <span class="log-toggle-chevron">▲</span>
+  </div>
+  <div class="log-list" id="logList"></div>
+</div>
+
+<!-- ══════════ 添加记忆弹窗 ══════════ -->
+<div class="modal-overlay" id="memoryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span>📝 添加记忆</span>
+      <button class="modal-close" onclick="closeModal('memoryModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <label>
+        内容
+        <textarea id="memoryContent" placeholder="想记住什么？"></textarea>
+      </label>
+      <label>
+        分类
+        <select id="memoryCategory">
+          <option value="fact">📌 事实</option>
+          <option value="event">📅 事件</option>
+          <option value="preference">❤️ 偏好</option>
+          <option value="people">👤 人物</option>
+          <option value="emotion">💭 情感</option>
+        </select>
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal secondary" onclick="closeModal('memoryModal')">取消</button>
+      <button class="btn-modal primary" onclick="addMemory()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 添加提醒弹窗 ══════════ -->
+<div class="modal-overlay" id="reminderModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span>⏰ 添加提醒</span>
+      <button class="modal-close" onclick="closeModal('reminderModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <label>
+        提醒内容
+        <input type="text" id="reminderContent" placeholder="比如：下午3点开会">
+      </label>
+      <label>
+        时间
+        <input type="datetime-local" id="reminderTime">
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal secondary" onclick="closeModal('reminderModal')">取消</button>
+      <button class="btn-modal primary" onclick="addReminder()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

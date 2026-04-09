@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Nexus · 智脑</title>
+  <link rel="stylesheet" href="/mobile-assets/mobile.css" />
+</head>
+<body>
+
+<!-- 背景光影 -->
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+
+<div class="app">
+  <div class="safe-top"></div>
+
+  <!-- ══ 顶栏 ══ -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" stroke="rgba(255,255,255,0.85)" stroke-width="1" fill="none"/><circle cx="6" cy="6" r="2" fill="rgba(255,255,255,0.85)"/></svg>
+      </div>
+      <span class="brand-name">NEXUS</span>
+    </div>
+    <div class="topbar-right">
+      <div class="online-pill" id="statusChip">
+        <span class="online-dot"></span>
+        <span>运行中</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ 内容区 ══ -->
+  <main class="scroll-area">
+
+    <!-- ────────────── 首页 ────────────── -->
+    <section class="view active" id="view-home">
+
+      <!-- 问候区 -->
+      <div class="greeting-card liquid-glass">
+        <div class="greeting-left">
+          <p class="greeting-sub" id="greetingTime">下午好</p>
+          <h1 class="greeting-name" id="greetingName">李建国</h1>
+          <p class="greeting-caption">退休教师 · 68岁</p>
+        </div>
+        <div class="avatar-wrap">
+          <div class="avatar">建</div>
+          <div class="avatar-ring"></div>
+        </div>
+        <div class="card-shine"></div>
+      </div>
+
+      <!-- 健康指标行 -->
+      <div class="metrics-row">
+        <div class="metric-card liquid-glass">
+          <span class="metric-val" id="mSteps">3,421</span>
+          <span class="metric-unit">步</span>
+          <span class="metric-label">今日步数</span>
+          <div class="metric-bar"><div class="metric-fill" style="width:46%"></div></div>
+        </div>
+        <div class="metric-card liquid-glass">
+          <span class="metric-val" id="mSleep">7.5</span>
+          <span class="metric-unit">h</span>
+          <span class="metric-label">昨夜睡眠</span>
+          <div class="metric-bar"><div class="metric-fill green" style="width:75%"></div></div>
+        </div>
+        <div class="metric-card liquid-glass">
+          <span class="metric-val" id="mHr">72</span>
+          <span class="metric-unit">bpm</span>
+          <span class="metric-label">静息心率</span>
+          <div class="metric-bar"><div class="metric-fill amber" style="width:60%"></div></div>
+        </div>
+      </div>
+
+      <!-- AI 场景卡 -->
+      <div class="scene-card liquid-glass">
+        <div class="scene-header">
+          <div class="scene-dot-wrap">
+            <span class="scene-dot-pulse"></span>
+            <span class="scene-eyebrow">实时场景</span>
+          </div>
+          <span class="scene-time" id="lastAnalyzeAt">—</span>
+        </div>
+        <h2 class="scene-title" id="sceneText">等待分析</h2>
+        <p class="scene-advice" id="adviceText">智脑尚未分析，请在控制台开启摄像头</p>
+        <div class="scene-footer">
+          <div class="analyze-stat">
+            <span class="stat-num" id="analyzeCount">0</span>
+            <span class="stat-label">次分析</span>
+          </div>
+          <button class="text-btn" id="btnRefreshHome">刷新</button>
+        </div>
+        <div class="card-shine"></div>
+      </div>
+
+      <!-- 今日待办 -->
+      <div class="group-header">今日待办</div>
+      <div class="sch-list" id="todayTodos"></div>
+
+      <!-- AI 提醒 -->
+      <div class="group-header">智脑提醒</div>
+      <div class="grouped-list liquid-glass" id="alertsList">
+        <div class="list-empty">暂无提醒</div>
+      </div>
+
+      <!-- 近期记忆 -->
+      <div class="group-header">近期记忆</div>
+      <div class="grouped-list liquid-glass" id="memoryPreview">
+        <div class="list-empty">暂无记忆</div>
+      </div>
+
+    </section>
+
+    <!-- ────────────── 功能模块 ────────────── -->
+    <section class="view" id="view-modules">
+
+      <!-- 关系图谱 -->
+      <div class="module-header">
+        <div>
+          <h3 class="module-title">关系图谱</h3>
+          <p class="module-sub">社交网络 · 自动识别</p>
+        </div>
+        <span class="badge blue">6 人</span>
+      </div>
+      <div class="liquid-glass module-card graph-card">
+        <div class="graph-legend">
+          <span class="legend-dot fam"></span><span class="legend-label">家人</span>
+          <span class="legend-dot fri"></span><span class="legend-label">朋友</span>
+          <span class="legend-dot med"></span><span class="legend-label">医护</span>
+          <span style="flex:1"></span>
+          <span style="font-size:10px;color:var(--t3)">11 人 · 3 层</span>
+        </div>
+        <div class="graph-stage">
+          <svg class="graph-svg" id="graphSvg"></svg>
+        </div>
+        <div class="card-shine"></div>
+      </div>
+
+      <!-- 日程管理 -->
+      <div class="module-header">
+        <div>
+          <h3 class="module-title">日程管理</h3>
+          <p class="module-sub">本周 · 3 个待办</p>
+        </div>
+        <span class="badge amber">待办 2</span>
+      </div>
+      <div class="sch-list" id="scheduleList"></div>
+
+      <!-- 人生自传 -->
+      <div class="module-header">
+        <div>
+          <h3 class="module-title">人生自传</h3>
+          <p class="module-sub">《建国往事》· 进行中</p>
+        </div>
+        <span class="badge green">新章节</span>
+      </div>
+      <div class="liquid-glass module-card story-card">
+        <div class="story-progress-wrap">
+          <div class="story-progress-bar">
+            <div class="story-progress-fill" style="width:62%"></div>
+          </div>
+          <span class="story-progress-text">第 3 / 5 章 · 62%</span>
+        </div>
+        <div class="story-divider"></div>
+        <h3 class="story-title">第三章 · 三尺讲台四十年</h3>
+        <p class="story-sub">包含 15 个教学故事，配有老照片 AI 修复图</p>
+        <div class="story-chips">
+          <span class="tag-chip">1973年执教</span>
+          <span class="tag-chip">优秀教师称号</span>
+          <span class="tag-chip">桃李满天下</span>
+        </div>
+        <div class="card-actions">
+          <button class="action-btn primary" id="btnReadStory">阅读全文</button>
+          <button class="action-btn" id="btnShareStory">分享家人</button>
+        </div>
+        <div class="card-shine"></div>
+      </div>
+
+      <!-- 智能守护 -->
+      <div class="module-header">
+        <div>
+          <h3 class="module-title">智能守护</h3>
+          <p class="module-sub">诈骗防御 · 实时监测</p>
+        </div>
+        <span class="badge green" id="guardBadge">安全</span>
+      </div>
+      <div class="liquid-glass module-card guard-card">
+        <div class="risk-display">
+          <div class="risk-level-wrap">
+            <span class="risk-level-num" id="riskNum">1</span>
+            <span class="risk-level-of">/ 5</span>
+          </div>
+          <div>
+            <div class="risk-meter">
+              <span class="risk-pip active safe"></span>
+              <span class="risk-pip"></span>
+              <span class="risk-pip"></span>
+              <span class="risk-pip"></span>
+              <span class="risk-pip"></span>
+            </div>
+            <p class="risk-desc" id="riskDesc">近期无可疑通话或信息</p>
+          </div>
+        </div>
+        <div id="guardReasons" class="guard-reasons"></div>
+      </div>
+
+      <!-- 会议纪要 -->
+      <div class="module-header">
+        <div>
+          <h3 class="module-title">会议纪要</h3>
+          <p class="module-sub">最近一次 · 家庭视频通话</p>
+        </div>
+      </div>
+      <div class="grouped-list liquid-glass" id="meetingSummary"></div>
+
+      <!-- 财务管家 -->
+      <div class="module-header">
+        <div>
+          <h3 class="module-title">财务管家</h3>
+          <p class="module-sub">本月支出 · 2,840 元</p>
+        </div>
+        <span class="badge blue">低于均值</span>
+      </div>
+      <div class="liquid-glass module-card">
+        <div class="finance-summary-row">
+          <div class="finance-summary-item">
+            <span class="fs-num">2,840</span>
+            <span class="fs-label">本月支出（元）</span>
+          </div>
+          <div class="finance-summary-item">
+            <span class="fs-num green">1,160</span>
+            <span class="fs-label">结余（元）</span>
+          </div>
+        </div>
+        <div class="finance-sep"></div>
+        <div id="financeBars"></div>
+        <p class="finance-tip" id="financeAdvice">餐饮支出正常，娱乐占比低，整体健康</p>
+      </div>
+
+    </section>
+
+    <!-- ────────────── 时间线 ────────────── -->
+    <section class="view" id="view-timeline">
+      <div class="page-header">
+        <h2 class="page-title">时间线</h2>
+        <button class="text-btn" id="btnRefreshTimeline">刷新</button>
+      </div>
+      <div class="timeline-wrap liquid-glass" id="timelineList">
+        <div class="list-empty">暂无事件</div>
+      </div>
+    </section>
+
+    <!-- ────────────── 设备 ────────────── -->
+    <section class="view" id="view-devices">
+      <div class="page-header">
+        <h2 class="page-title">家庭设备</h2>
+        <button class="text-btn" id="btnRefreshDevices">刷新</button>
+      </div>
+      <div class="devices-container" id="devicesList"></div>
+    </section>
+
+    <!-- ────────────── 我的 ────────────── -->
+    <section class="view" id="view-profile">
+      <div class="page-header">
+        <h2 class="page-title">我的画像</h2>
+      </div>
+
+      <!-- 画像卡头 -->
+      <div class="profile-hero liquid-glass">
+        <div class="profile-avatar">建</div>
+        <div class="profile-info">
+          <h3 class="profile-name">李建国</h3>
+          <p class="profile-meta">68岁 · 退休教师 · 北京</p>
+          <div class="profile-tags">
+            <span class="tag-chip">高血压</span>
+            <span class="tag-chip">独居</span>
+            <span class="tag-chip">爱下棋</span>
+          </div>
+        </div>
+        <div class="card-shine"></div>
+      </div>
+
+      <!-- 画像表单 -->
+      <div class="group-header">偏好设置</div>
+      <div class="form-card liquid-glass">
+        <div class="form-group">
+          <label class="form-label">姓名</label>
+          <input class="form-input" id="pName" placeholder="主用户" />
+        </div>
+        <div class="form-sep"></div>
+        <div class="form-group">
+          <label class="form-label">群体</label>
+          <div class="form-select-wrap">
+            <select class="form-input" id="pGroup">
+              <option value="elderly">老年人</option>
+              <option value="adult">成年人</option>
+              <option value="youth">年轻人</option>
+            </select>
+            <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="form-sep"></div>
+        <div class="form-group">
+          <label class="form-label">沟通风格</label>
+          <div class="form-select-wrap">
+            <select class="form-input" id="pStyle">
+              <option value="gentle">温和</option>
+              <option value="direct">直接</option>
+              <option value="casual">随意</option>
+              <option value="formal">正式</option>
+            </select>
+            <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="form-sep"></div>
+        <div class="form-group">
+          <div class="form-label-row">
+            <label class="form-label">主动程度</label>
+            <span class="form-val-badge" id="pLevelNum">0.8</span>
+          </div>
+          <input class="form-slider" id="pLevel" type="range" min="0" max="1" step="0.1" value="0.8" />
+        </div>
+      </div>
+
+      <!-- 健康档案 -->
+      <div class="group-header">健康档案</div>
+      <div class="grouped-list liquid-glass">
+        <div class="list-row-kv">
+          <span class="kv-key">常用药物</span>
+          <span class="kv-val">苯磺酸氨氯地平 5mg</span>
+        </div>
+        <div class="list-row-kv">
+          <span class="kv-key">服药时间</span>
+          <span class="kv-val">每日 12:30</span>
+        </div>
+        <div class="list-row-kv">
+          <span class="kv-key">血压目标</span>
+          <span class="kv-val">收缩压 &lt; 140</span>
+        </div>
+        <div class="list-row-kv">
+          <span class="kv-key">主治医生</span>
+          <span class="kv-val blue">张医生 · 社区卫生中心</span>
+        </div>
+      </div>
+
+      <!-- 紧急联系人 -->
+      <div class="group-header">紧急联系人</div>
+      <div class="grouped-list liquid-glass">
+        <div class="contact-row">
+          <div class="contact-avatar blue">明</div>
+          <div class="contact-info">
+            <span class="contact-name">李明</span>
+            <span class="contact-rel">儿子 · 138-xxxx-5566</span>
+          </div>
+          <div class="contact-tag blue">主要</div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-avatar green">芬</div>
+          <div class="contact-info">
+            <span class="contact-name">王淑芬</span>
+            <span class="contact-rel">配偶 · 同住</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="save-btn liquid-glass" id="btnSaveProfile">保存修改</button>
+    </section>
+
+  </main>
+
+  <!-- ══ TabBar ══ -->
+  <nav class="tabbar liquid-glass">
+    <button class="tab active" data-target="home">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+      <span class="tab-label">首页</span>
+    </button>
+    <button class="tab" data-target="modules">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
+      <span class="tab-label">功能</span>
+    </button>
+    <button class="tab" data-target="timeline">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span class="tab-label">时间线</span>
+    </button>
+    <button class="tab" data-target="devices">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <span class="tab-label">设备</span>
+    </button>
+    <button class="tab" data-target="profile">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="tab-label">我的</span>
+    </button>
+  </nav>
+
+  <div class="safe-bottom"></div>
+</div>
+
+<script src="/mobile-assets/mobile.js"></script>
+</body>
+</html>
