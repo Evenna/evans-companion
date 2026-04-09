@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: evans-companion
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GLM_API_KEY
+        sync: false
+      - key: GLM_MODEL
+        value: glm-4v-plus
+      - key: PYTHON_VERSION
+        value: 3.11.0
