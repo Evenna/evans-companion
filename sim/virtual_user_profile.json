@@ -1,0 +1,49 @@
+{
+  "name": "林小晴",
+  "age": 28,
+  "occupation": "互联网产品经理",
+  "location": "北京朝阳区",
+  "personality": {
+    "MBTI": "ENFP",
+    "communication_style": "活泼直接，喜欢发表情包",
+    "emotional_baseline": "平时乐观，偶尔焦虑工作压力"
+  },
+  "daily_schedule": {
+    "wake": "07:30",
+    "breakfast": "07:45-08:15",
+    "commute": "08:30-09:30",
+    "work": "09:30-12:00",
+    "lunch": "12:00-13:00",
+    "work_afternoon": "13:00-18:30",
+    "gym": "19:00-20:00",
+    "dinner": "20:30-21:00",
+    "relax": "21:00-23:00",
+    "sleep": "23:30"
+  },
+  "preferences": {
+    "food": ["川菜", "火锅", "奶茶", "沙拉"],
+    "hobbies": ["跑步", "看电影", "看书", "撸猫"],
+    "music": ["流行", "轻音乐", "播客"],
+    "avoid": ["香菜", "辛辣过重"]
+  },
+  "health": {
+    "chronic": "轻微慢性咽炎",
+    "medication": "偶尔含润喉片",
+    "exercise_goal": "每周3次健身房"
+  },
+  "relationships": {
+    "family": "父母在杭州，偶尔视频",
+    "friends": "周末常和闺蜜聚会",
+    "colleagues": "关系不错，午休常一起点外卖"
+  },
+  "work_context": {
+    "current_project": "正在推进一个新功能上线",
+    "work_stress": "中等，下周有评审",
+    "work_style": "喜欢用备忘录，待办事项多"
+  },
+  "emotional_triggers": {
+    "happy": ["完成重要任务", "收到好评", "天气好"],
+    "anxious": ["deadline临近", "领导追问进度", "多人会议"],
+    "tired": ["加班太晚", "睡眠不足", "连续开会"]
+  }
+}
